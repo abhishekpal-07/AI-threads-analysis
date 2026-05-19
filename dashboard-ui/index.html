@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Security Threat Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 20px; background-color: #0f172a; color: #f8fafc; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1e293b; padding-bottom: 20px; margin-bottom: 20px; }
+        .status-badge { padding: 6px 12px; background-color: #22c55e; color: white; border-radius: 20px; font-weight: bold; font-size: 14px; }
+        .card { background-color: #1e293b; padding: 20px; border-radius: 8px; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        .alert-box { background-color: #020617; border-left: 4px solid #ef4444; padding: 15px; margin-top: 15px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; }
+        h1 { color: #38bdf8; margin: 0; }
+        .pulse { animation: blink 1.5s infinite; }
+        @keyframes blink { 50% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🛡️ AI-Powered Threat Analytics Platform</h1>
+                <p style="color: #94a3b8; margin: 5px 0 0 0;">DevOps Enterprise Microservices Project</p>
+            </div>
+            <div id="status" class="status-badge pulse">AI Engine Connected</div>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-top: 0; color: #f43f5e;">🚨 Live Threat Monitoring Feed</h2>
+            <p style="color: #94a3b8;">System logs are being filtered through the Python FastAPI Machine Learning engine in real-time:</p>
+            
+            <div id="logs-container">
+                <div class="alert-box" style="border-left-color: #38bdf8;">
+                    [SYSTEM INFO]: Log Streaming Dashboard Initialized. Waiting for pipeline events...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Python FastAPI AI server se connect karke check karne ka function
+        async function checkAIHealth() {
+            try {
+                const response = await fetch('http://localhost:8000/health');
+                const data = await response.json();
+                if(data.status === 'healthy') {
+                    document.getElementById('status').innerText = "AI Engine Live";
+                    document.getElementById('status').style.backgroundColor = "#22c55e";
+                }  
+            }catch (error) {
+                document.getElementById('status').innerText = "AI Engine Offline";
+                document.getElementById('status').style.backgroundColor = "#ef4444";
+            }
+        }
+        // Har 5 second me backend health check karega
+        setInterval(checkAIHealth, 5000);
+        checkAIHealth();
+    </script>
+</body>
+</html>

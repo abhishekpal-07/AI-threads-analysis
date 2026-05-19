@@ -1,0 +1,13 @@
+{
+  "name": "log-generator-service",
+  "version": "1.0.0",
+  "description": "Generates fake server logs for AI detection",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "ioredis": "^5.4.1"
+  }
+}

@@ -1,0 +1,46 @@
+name: Enterprise Microservices CI CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  # तीनों सर्विसेज को एक साथ (Parallel) बिल्ड करने का जॉब
+  build-all-services:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. कोड कॉपी करना
+    - name: Checkout Repository Code
+      uses: actions/checkout@v4
+
+    # 2. Docker Hub पर सुरक्षित लॉगिन
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    # 3. SERVICE 1: Node.js Log Generator Build & Push
+    - name: Build Log Generator
+      uses: docker/build-push-action@v5
+      with:
+        context: ./log-generator
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/ai-log-generator:latest
+
+    # 4. SERVICE 2: Python AI Analyzer Build & Push
+    - name: Build AI Analyzer
+      uses: docker/build-push-action@v5
+      with:
+        context: ./ai-analyzer
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/ai-analyzer:latest
+
+    # 5. SERVICE 3: Frontend Dashboard UI Build & Push
+    - name: Build Dashboard UI
+      uses: docker/build-push-action@v5
+      with:
+        context: ./dashboard-ui
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/ai-dashboard-ui:latest

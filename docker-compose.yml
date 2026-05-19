@@ -1,0 +1,57 @@
+services:
+  # 1. Message Broker (Redis)
+  redis-queue:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - ai-platform-network
+
+  # 2. Database Storage (MongoDB)
+  mongodb-container:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-security-data:/data/db  # Volume data persistence ke liye
+    networks:
+      - ai-platform-network
+
+  # 3. Node.js Log Generator
+  log-generator:
+    build:
+      context: ./log-generator
+    depends_on:
+      - redis-queue
+    networks:
+      - ai-platform-network
+
+  # 4. Python FastAPI AI Analyzer
+  ai-analyzer:
+    build:
+      context: ./ai-analyzer
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis-queue
+      - mongodb-container  # Ab ye database chalne ka bhi wait karega
+    networks:
+      - ai-platform-network
+
+  # 5. Frontend Dashboard UI
+  dashboard-ui:
+    build:
+      context: ./dashboard-ui
+    ports:
+      - "8080:80"
+    depends_on:
+      - ai-analyzer
+    networks:
+      - ai-platform-network
+
+networks:
+  ai-platform-network:
+    driver: bridge
+
+volumes:
+  mongo-security-data:  # Permanent volume declaration
